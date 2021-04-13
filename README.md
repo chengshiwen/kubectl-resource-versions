@@ -1,6 +1,5 @@
 # kubectl-resource-versions
 
-[![Build Status](https://travis-ci.com/chengshiwen/kubectl-resource-versions.svg?branch=master)](https://travis-ci.com/chengshiwen/kubectl-resource-versions)
 [![Go Report Card](https://goreportcard.com/badge/chengshiwen/kubectl-resource-versions)](https://goreportcard.com/report/chengshiwen/kubectl-resource-versions)
 [![LICENSE](https://img.shields.io/github/license/chengshiwen/kubectl-resource-versions.svg)](https://github.com/chengshiwen/kubectl-resource-versions/blob/master/LICENSE)
 [![Releases](https://img.shields.io/github/release-pre/chengshiwen/kubectl-resource-versions.svg)](https://github.com/chengshiwen/kubectl-resource-versions/releases)
@@ -29,21 +28,30 @@ If you want to use the kubectl plugins package manager [Krew](https://github.com
 $ kubectl krew install resource-versions
 ```
 
+> Tips: [Installing Krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) is required first
+
 ## Usage
 
 ```bash
 $ kubectl-resource-versions --help
+# or
+$ kubectl resource-versions --help
+
 Print the supported API resource versions on the server
 
 Usage:
-  kubectl resource-versions [flags]
+  kubectl-resource-versions [flags]
 
 Examples:
   # Print the supported API resource versions
+  kubectl-resource-versions
+  # Print by kubectl plugin
   kubectl resource-versions
 
 Flags:
-  -h, --help   help for kubectl
+  -h, --help                help for kubectl-resource-versions
+      --kubeconfig string   path to the kubeconfig file to use for CLI requests (default "$HOME/.kube/config")
+  -v, --version             version for kubectl-resource-versions
 ```
 
 ## Reference

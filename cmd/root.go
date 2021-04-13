@@ -31,48 +31,62 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
+const Version = "0.1.0"
+
+var KubeConfig string
+
+func defaultKubeConfig() string {
+	if home := homedir.HomeDir(); home != "" {
+		return filepath.Join(home, ".kube", "config")
+	}
+	return ""
+}
+
 func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Args:         cobra.NoArgs,
-		Use:          "kubectl resource-versions",
-		Short:        "Print the supported API resource versions",
-		Long:         "Print the supported API resource versions on the server",
-		Example:      "  # Print the supported API resource versions\n  kubectl resource-versions",
-		SilenceUsage: true,
-		RunE: func(c *cobra.Command, args []string) error {
-			if err := runE(); err != nil {
-				return err
+		Args:          cobra.NoArgs,
+		Use:           "kubectl-resource-versions",
+		Short:         "Print the supported API resource versions",
+		Long:          "Print the supported API resource versions on the server",
+		Example:       "  # Print the supported API resource versions\n  kubectl-resource-versions\n  # Print by kubectl plugin\n  kubectl resource-versions",
+		SilenceUsage:  true,
+		SilenceErrors: true,
+		Version:       Version,
+		RunE: func(c *cobra.Command, args []string) (err error) {
+			if err = runE(); err != nil {
+				fmt.Println(err)
+				return
 			}
-			return nil
+			return
 		},
 	}
+	cmd.PersistentFlags().StringVar(&KubeConfig, "kubeconfig", defaultKubeConfig(), "path to the kubeconfig file to use for CLI requests")
 	return cmd
 }
 
-func runE() error {
+func runE() (err error) {
 	// use the current context in kubeconfig
-	kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	config, err := clientcmd.BuildConfigFromFlags("", KubeConfig)
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 	// create the clientset
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 
 	// request /openapi/v2
 	body, err := clientset.RESTClient().Get().AbsPath("/openapi/v2").Do(context.TODO()).Raw()
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 	var document struct {
 		Paths map[string]interface{} `json:"paths,omitempty"`
 	}
 	err = json.Unmarshal(body, &document)
 	if err != nil {
-		panic(err.Error())
+		return
 	}
 
 	// filter valid paths
@@ -114,5 +128,5 @@ func runE() error {
 	for _, resource := range resourceKeys {
 		fmt.Printf(format, resource, strings.Join(resources[resource], ", "))
 	}
-	return nil
+	return
 }
