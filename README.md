@@ -3,6 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/chengshiwen/kubectl-resource-versions)](https://goreportcard.com/report/chengshiwen/kubectl-resource-versions)
 [![LICENSE](https://img.shields.io/github/license/chengshiwen/kubectl-resource-versions.svg)](https://github.com/chengshiwen/kubectl-resource-versions/blob/master/LICENSE)
 [![Releases](https://img.shields.io/github/release-pre/chengshiwen/kubectl-resource-versions.svg)](https://github.com/chengshiwen/kubectl-resource-versions/releases)
+![GitHub stars](https://img.shields.io/github/stars/chengshiwen/kubectl-resource-versions.svg?label=github%20stars&logo=github)
 
 kubectl-resource-versions - kubectl plugin to print the supported API resource versions on the server
 
@@ -12,7 +13,7 @@ Have you ever wondered which api group and version should be used for a specifie
 
 In one deployment definition you could see this `apiVersion: apps/v1beta2`, and in another `apiVersion: apps/v1`. Which one is correct? Which you should use? How to check which are supported on your Kubernetes cluster?
 
-It is useful to find out the matrix of resources and api versions by using this kubectl plugin are shown below.
+It is useful to find out the matrix of resources and api versions by using this kubectl plugin as shown below.
 
 ![kubectl-resource-versions example](doc/kubectl-resource-versions.png)
 
