@@ -46,9 +46,9 @@ func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Args:          cobra.NoArgs,
 		Use:           "kubectl-resource-versions",
-		Short:         "Print the supported API resource versions",
-		Long:          "Print the supported API resource versions on the server",
-		Example:       "  # Print the supported API resource versions\n  kubectl-resource-versions\n  # Print by kubectl plugin\n  kubectl resource-versions",
+		Short:         "Print the supported API resources with groups/versions",
+		Long:          "Print the supported API resources along with groups/versions on the server",
+		Example:       "  # Print the supported API resources with groups/versions\n  kubectl-resource-versions\n  # Print by kubectl plugin\n  kubectl resource-versions",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Version:       Version,
