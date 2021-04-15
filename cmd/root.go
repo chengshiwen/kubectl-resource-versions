@@ -33,7 +33,9 @@ import (
 
 const Version = "0.1.0"
 
-var KubeConfig string
+type flags struct {
+	KubeConfig string
+}
 
 func defaultKubeConfig() string {
 	if home := homedir.HomeDir(); home != "" {
@@ -42,7 +44,15 @@ func defaultKubeConfig() string {
 	return ""
 }
 
+func Execute() {
+	cmd := NewCommand()
+	if err := cmd.Execute(); err != nil {
+		fmt.Println(err)
+	}
+}
+
 func NewCommand() *cobra.Command {
+	flags := &flags{}
 	cmd := &cobra.Command{
 		Args:          cobra.NoArgs,
 		Use:           "kubectl-resource-versions",
@@ -52,21 +62,17 @@ func NewCommand() *cobra.Command {
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Version:       Version,
-		RunE: func(c *cobra.Command, args []string) (err error) {
-			if err = runE(); err != nil {
-				fmt.Println(err)
-				return
-			}
-			return
+		RunE: func(c *cobra.Command, args []string) error {
+			return runE(flags)
 		},
 	}
-	cmd.PersistentFlags().StringVar(&KubeConfig, "kubeconfig", defaultKubeConfig(), "path to the kubeconfig file to use for CLI requests")
+	cmd.PersistentFlags().StringVar(&flags.KubeConfig, "kubeconfig", defaultKubeConfig(), "path to the kubeconfig file to use for CLI requests")
 	return cmd
 }
 
-func runE() (err error) {
+func runE(flags *flags) (err error) {
 	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", KubeConfig)
+	config, err := clientcmd.BuildConfigFromFlags("", flags.KubeConfig)
 	if err != nil {
 		return
 	}
@@ -89,9 +95,14 @@ func runE() (err error) {
 		return
 	}
 
+	printResult(document.Paths)
+	return
+}
+
+func printResult(paths map[string]interface{}) {
 	// filter valid paths
 	validPaths := make([]string, 0)
-	for path := range document.Paths {
+	for path := range paths {
 		if (strings.HasPrefix(path, "/api/") && !strings.HasSuffix(path, "/") && len(strings.Split(path, "/")) == 4) ||
 			(strings.HasPrefix(path, "/apis/") && !strings.HasSuffix(path, "/") && len(strings.Split(path, "/")) == 5) {
 			validPaths = append(validPaths, path)
@@ -128,5 +139,4 @@ func runE() (err error) {
 	for _, resource := range resourceKeys {
 		fmt.Printf(format, resource, strings.Join(resources[resource], ", "))
 	}
-	return
 }

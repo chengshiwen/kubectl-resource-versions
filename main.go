@@ -17,15 +17,10 @@ limitations under the License.
 package main
 
 import (
-	"os"
-
 	"github.com/chengshiwen/kubectl-resource-versions/cmd"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
 func main() {
-	command := cmd.NewCommand()
-	if err := command.Execute(); err != nil {
-		os.Exit(1)
-	}
+	cmd.Execute()
 }
