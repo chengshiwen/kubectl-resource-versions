@@ -5,7 +5,7 @@
 [![Releases](https://img.shields.io/github/release-pre/chengshiwen/kubectl-resource-versions.svg)](https://github.com/chengshiwen/kubectl-resource-versions/releases)
 ![GitHub stars](https://img.shields.io/github/stars/chengshiwen/kubectl-resource-versions.svg?label=github%20stars&logo=github)
 
-kubectl-resource-versions - This kubectl plugin prints the supported API resources along with groups/versions on the server
+kubectl-resource-versions - This kubectl plugin prints the API resources along with the supported API versions in the form of group/version on the server
 
 ## Intro
 
@@ -13,7 +13,7 @@ Have you ever wondered which api group and version should be used for a specifie
 
 In one deployment definition you could see this `apiVersion: apps/v1beta2`, and in another `apiVersion: apps/v1`. Which one is correct? Which you should use? How to check which are supported on your Kubernetes cluster?
 
-It is useful to find out the API resources available on the API server along with groups/versions that offer that API as shown below.
+It is useful to find out the API resources along with the supported API versions in the form of group/version on the server as shown below.
 
 ![kubectl-resource-versions example](doc/kubectl-resource-versions.png)
 
@@ -38,13 +38,13 @@ $ kubectl-resource-versions --help
 # or
 $ kubectl resource-versions --help
 
-Print the supported API resource versions on the server
+Print the API resources along with the supported API versions in the form of group/version on the server
 
 Usage:
   kubectl-resource-versions [flags]
 
 Examples:
-  # Print the supported API resource versions
+  # Print the API resources with the supported API versions
   kubectl-resource-versions
   # Print by kubectl plugin
   kubectl resource-versions

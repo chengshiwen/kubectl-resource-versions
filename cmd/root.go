@@ -31,7 +31,7 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-const Version = "0.1.0"
+const Version = "0.1.1"
 
 type flags struct {
 	KubeConfig string
@@ -54,11 +54,11 @@ func Execute() {
 func NewCommand() *cobra.Command {
 	flags := &flags{}
 	cmd := &cobra.Command{
-		Args:          cobra.NoArgs,
 		Use:           "kubectl-resource-versions",
-		Short:         "Print the supported API resources with groups/versions",
-		Long:          "Print the supported API resources along with groups/versions on the server",
-		Example:       "  # Print the supported API resources with groups/versions\n  kubectl-resource-versions\n  # Print by kubectl plugin\n  kubectl resource-versions",
+		Short:         "Print the API resources with the supported API versions",
+		Long:          "Print the API resources along with the supported API versions in the form of group/version on the server",
+		Example:       "  # Print the API resources with the supported API versions\n  kubectl-resource-versions\n  # Print by kubectl plugin\n  kubectl resource-versions",
+		Args:          cobra.NoArgs,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Version:       Version,
