@@ -33,8 +33,9 @@ import (
 
 var Version = "unknown"
 
-type flags struct {
-	KubeConfig string
+type command struct {
+	cobraCmd   *cobra.Command
+	kubeConfig string
 }
 
 func defaultKubeConfig() string {
@@ -52,8 +53,8 @@ func Execute() {
 }
 
 func NewCommand() *cobra.Command {
-	flags := &flags{}
-	cmd := &cobra.Command{
+	cmd := &command{}
+	cmd.cobraCmd = &cobra.Command{
 		Use:           "kubectl-resource-versions",
 		Short:         "Print the API resources with the supported API versions",
 		Long:          "Print the API resources along with the supported API versions in the form of group/version on the server",
@@ -63,16 +64,17 @@ func NewCommand() *cobra.Command {
 		SilenceErrors: true,
 		Version:       Version,
 		RunE: func(c *cobra.Command, args []string) error {
-			return runE(flags)
+			return cmd.runE()
 		},
 	}
-	cmd.PersistentFlags().StringVar(&flags.KubeConfig, "kubeconfig", defaultKubeConfig(), "path to the kubeconfig file to use for CLI requests")
-	return cmd
+	pflags := cmd.cobraCmd.PersistentFlags()
+	pflags.StringVar(&cmd.kubeConfig, "kubeconfig", defaultKubeConfig(), "path to the kubeconfig file to use for CLI requests")
+	return cmd.cobraCmd
 }
 
-func runE(flags *flags) (err error) {
+func (cmd *command) runE() (err error) {
 	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", flags.KubeConfig)
+	config, err := clientcmd.BuildConfigFromFlags("", cmd.kubeConfig)
 	if err != nil {
 		return
 	}
@@ -95,11 +97,11 @@ func runE(flags *flags) (err error) {
 		return
 	}
 
-	printResult(document.Paths)
+	cmd.printResult(document.Paths)
 	return
 }
 
-func printResult(paths map[string]interface{}) {
+func (cmd *command) printResult(paths map[string]interface{}) {
 	// filter valid paths
 	validPaths := make([]string, 0)
 	for path := range paths {
