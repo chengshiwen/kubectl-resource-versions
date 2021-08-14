@@ -1,10 +1,11 @@
 # Makefile
 
-LDFLAGS     ?= "-s -w"
+VERSION     := 0.1.1
+LDFLAGS     ?= "-s -w -X github.com/chengshiwen/kubectl-resource-versions/cmd.Version=$(VERSION)"
 GOBUILD_ENV = GO111MODULE=on CGO_ENABLED=0
 GOX         = go run github.com/mitchellh/gox
-TARGETS     := darwin/amd64 linux/amd64 windows/amd64
-DIST_DIRS   := find * -type d -maxdepth 0 -exec
+TARGETS     := darwin/amd64 darwin/arm64 linux/amd64 windows/amd64
+DIST_DIRS   := find * -maxdepth 0 -type d -exec
 
 .PHONY: build cross-build release test lint down tidy clean
 
@@ -14,7 +15,7 @@ build:
 	$(GOBUILD_ENV) go build -o bin/kubectl-resource-versions -a -ldflags $(LDFLAGS)
 
 cross-build: clean
-	$(GOBUILD_ENV) $(GOX) -ldflags $(LDFLAGS) -parallel=3 -output="bin/kubectl-resource-versions-{{.OS}}-{{.Arch}}/kubectl-resource-versions" -osarch='$(TARGETS)' .
+	$(GOBUILD_ENV) $(GOX) -ldflags $(LDFLAGS) -parallel=4 -output="bin/kubectl-resource-versions-{{.OS}}-{{.Arch}}/kubectl-resource-versions" -osarch='$(TARGETS)' .
 
 release: cross-build
 	( \

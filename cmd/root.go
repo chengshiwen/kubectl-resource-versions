@@ -31,7 +31,7 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-const Version = "0.1.1"
+var Version = "unknown"
 
 type flags struct {
 	KubeConfig string
