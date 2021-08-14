@@ -1,6 +1,6 @@
 # Makefile
 
-VERSION     := 0.1.1
+VERSION     := 0.1.2
 LDFLAGS     ?= "-s -w -X github.com/chengshiwen/kubectl-resource-versions/cmd.Version=$(VERSION)"
 GOBUILD_ENV = GO111MODULE=on CGO_ENABLED=0
 GOX         = go run github.com/mitchellh/gox
